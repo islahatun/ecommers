@@ -35,28 +35,33 @@ export default {
     ratio: "rounded-xl",
     search: '',
     headers:[
+      {title:'No', key:'no'},
       {title:'Name', key:'name'},
       {title:'complaint',key:'complaint'},
       {title:'Status',key:'status'}
     ],
     items : [
   {
-    name: "African Elephant",
+    no: "1",
+     name: "African Elephant",
     complaint: "Loxodonta africana",
     status: "Herbivore",
   },
   {
-    name: "African Elephant",
+    no: "2",
+     name: "African Elephant",
     complaint: "Loxodonta africana",
     status: "Herbivore",
   },
   {
-    name: "African Elephant",
+    no: "3",
+     name: "African Elephant",
     complaint: "Loxodonta africana",
     status: "Herbivore",
   },
   {
-    name: "African Elephant",
+    no: "4",
+     name: "African Elephant",
     complaint: "Loxodonta africana",
     status: "Herbivore",
   },

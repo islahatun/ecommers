@@ -26,6 +26,7 @@
           <v-list-item :to="'/admin/users'" prepend-icon="mdi-account-group-outline" title="Users" value="users"></v-list-item>
           <v-list-item :to="'/admin/product'" prepend-icon="mdi-account" title="Product" value="Product"></v-list-item>
           <v-list-item :to="'/admin/complaint'" prepend-icon="mdi-account" title="Complaint" value="Complaint"></v-list-item>
+          <v-list-item :to="'/admin/orders'" prepend-icon="mdi-account" title="Orders" value="Orders"></v-list-item>
 
         </v-list>
       </v-navigation-drawer>

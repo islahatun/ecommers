@@ -48,6 +48,11 @@ const routes = [
         path:'complaint',
         name:'Complaint',
         component:()=>import('@/views/admin/viewAdminComplaint.vue')
+      },
+      {
+        path:'orders',
+        name:'Orders',
+        component:()=>import('@/views/admin/viewAdminOrders.vue')
       }
     ]
   }
