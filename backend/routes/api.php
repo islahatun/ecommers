@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\Api\RegisterController;
-use App\Http\Controllers\api\LoginController;
 use App\Http\Controllers\api\testMailController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/register', RegisterController::class);
-Route::post('/login', LoginController::class);
-Route::post('/testMail',[testMailController::class,'index']);
+Route::post('/login', [AuthController::class,'login']);
+Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
+Route::post('/testMail',[testMailController::class,'index'])->middleware('auth:sanctum');

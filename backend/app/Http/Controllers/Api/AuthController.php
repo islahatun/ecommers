@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request)
+    public function login(Request $request)
     {
         $credentials = $request->only('email','password');
 
@@ -26,7 +26,12 @@ class LoginController extends Controller
 
             return response()->json(['token'=>$token],200);
         }else{
-            return response()->json(['error'=>'Unauthorized'],200);
+            return response()->json(['error'=>'Unauthorized'],401);
         }
+    }
+    public function logout(Request $request){
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['success'=>true],200);
     }
 }
