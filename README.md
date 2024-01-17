@@ -2,12 +2,19 @@ untuk mengirim email, email aktif yang akan di jadikan email pengirim harus di s
 
 ---- jika menggunakan gmail
 MAIL_MAILER=smtp
+
 MAIL_HOST=smtp.gmail.com
+
 MAIL_PORT=587
+
 MAIL_USERNAME=namaemailanda@gmail.com
+
 MAIL_PASSWORD=passwordemailaplikasi
+
 MAIL_ENCRYPTION=tls
+
 MAIL_FROM_ADDRESS="namaemailanda@gmail.com"
+
 MAIL_FROM_NAME="${APP_NAME}"
 
 ----- untuk MAIL_PASSWORD anda harus setting di akun email nya dengan cara 
