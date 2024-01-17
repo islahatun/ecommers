@@ -1,4 +1,5 @@
-untuk mengirim email, email aktif yang akan di jadikan email pengirim harus di setting terlebih dahulu 
+untuk mengirim email, email aktif yang akan di jadikan email pengirim harus di setting terlebih dahulu.
+
 ---- jika menggunakan gmail
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
