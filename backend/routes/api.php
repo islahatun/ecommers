@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\api\testMailController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -26,3 +27,8 @@ Route::post('/register', RegisterController::class);
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanctum');
 Route::post('/testMail',[testMailController::class,'index'])->middleware('auth:sanctum');
+
+Route::group(['as' => 'categories.', 'prefix' => 'categories'], function () {
+    Route::resource('categories',CategoryController::class)->middleware('auth:sanctum');
+    Route::get('getDataCategories',[CategoryController::class,'getData'])->middleware('auth:sanctum');
+});
