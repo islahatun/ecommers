@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('expedisi_name');
             $table->integer('start_estimasi');
             $table->integer('end_estimasi');
-            $table->double('shipping_cost');
-            $table->integer('distance');
+            $table->double('shipping_cost',10,2);
+            $table->double('distance',5,2);
             $table->timestamps();
         });
     }
