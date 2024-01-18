@@ -22,7 +22,7 @@ class AuthController extends Controller
             // install laravel passport untuk bisa menjalankan createToken atau bisa menggunakan sanctum
             // bisa menggunakan accessToken atau plainTextToken
             //  'AuthToken' hanyalah sebuah string biasa bisa diisi apa aja
-            $token  = $user->createToken('AuthToken')->accessToken;
+            $token  = $user->createToken('AuthToken')->plainTextToken;
 
             return response()->json(['token'=>$token],200);
         }else{

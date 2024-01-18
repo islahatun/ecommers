@@ -37,15 +37,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = validator::make($request->all,[
-            'category_name' => 'required|unique'
+        $validator = validator::make($request->all(),[
+            'category_name' => 'required|unique:categories'
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(),422);
         }
 
-        $category   = category::create($validator);
+        $category   = category::create([
+            'category_name'=>$request->category_name
+        ]);
 
         if($category){
             return response()->json([
@@ -81,15 +83,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validator = validator::make($request->all,[
-            'category_name' => 'required|unique'
+        $validator = validator::make($request->all(),[
+            'category_name' => 'required|unique:categories'
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(),422);
         }
 
-        $category   = category::where('id',$id)->update($validator);
+        $category   = category::where('id',$id)->update([
+            'category_name'=>$request->category_name
+        ]);
 
         if($category){
             return response()->json([
