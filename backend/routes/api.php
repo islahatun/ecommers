@@ -30,5 +30,5 @@ Route::post('/testMail',[testMailController::class,'index'])->middleware('auth:s
 
 Route::group(['as' => 'categories.', 'prefix' => 'categories'], function () {
     Route::resource('categories',CategoryController::class);
-    Route::get('getDataCategories',[CategoryController::class,'getData']);
+    Route::get('getDataCategories',[CategoryController::class,'getData'])->middleware('auth:sanctum');
 });
