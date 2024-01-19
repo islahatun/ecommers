@@ -43,6 +43,10 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'public_banners' => [
+            'driver'    => 'local',
+            'root'      => public_path().'/banners'
+        ],
 
         's3' => [
             'driver' => 's3',

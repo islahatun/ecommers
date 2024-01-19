@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\api\testMailController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\expedisiController;
 use Illuminate\Support\Facades\Route;
@@ -38,4 +39,9 @@ Route::group(['as' => 'categories', 'prefix' => 'categories'], function () {
 Route::group(['as' => 'expedisis', 'prefix' => 'expedisis'], function () {
     Route::resource('expedisis',expedisiController::class);
     Route::get('getDataExpedisi',[expedisiController::class,'getData']);
+});
+
+Route::group(['as' => 'banners', 'prefix' => 'banners'], function () {
+    Route::resource('banners',BannerController::class);
+    Route::get('getDataBanners',[BannerController::class,'getData']);
 });
