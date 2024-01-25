@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\Api\BannersController;
+use App\Http\Controllers\Api\CategoriesController;
+use App\Http\Controllers\Api\expedisionController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\api\testMailController;
-use App\Http\Controllers\BannerController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\expedisiController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -32,16 +32,16 @@ Route::post('/logout', [AuthController::class,'logout'])->middleware('auth:sanct
 Route::post('/testMail',[testMailController::class,'index'])->middleware('auth:sanctum');
 
 Route::group(['as' => 'categories', 'prefix' => 'categories'], function () {
-    Route::resource('categories',CategoryController::class);
-    Route::get('getDataCategories',[CategoryController::class,'getData']);
+    Route::resource('categories',CategoriesController::class);
+    Route::get('getDataCategories',[CategoriesController::class,'getData']);
 });
 
 Route::group(['as' => 'expedisis', 'prefix' => 'expedisis'], function () {
-    Route::resource('expedisis',expedisiController::class);
-    Route::get('getDataExpedisi',[expedisiController::class,'getData']);
+    Route::resource('expedisis',expedisionController::class);
+    Route::get('getDataExpedisi',[expedisionController::class,'getData']);
 });
 
 Route::group(['as' => 'banners', 'prefix' => 'banners'], function () {
-    Route::resource('banners',BannerController::class);
-    Route::get('getDataBanners',[BannerController::class,'getData']);
+    Route::resource('banners',BannersController::class);
+    Route::get('getDataBanners',[BannersController::class,'getData']);
 });

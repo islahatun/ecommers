@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\expedisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class expedisiController extends Controller
+class expedisionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -147,3 +148,4 @@ class expedisiController extends Controller
 
     }
 }
+
