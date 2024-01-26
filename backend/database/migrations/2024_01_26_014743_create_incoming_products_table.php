@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('incoming_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->text('comment');
+            $table->foreignId('id_product');
+            $table->integer('incoming_product');
+            $table->date('date_of_entry');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('incoming_products');
     }
 };

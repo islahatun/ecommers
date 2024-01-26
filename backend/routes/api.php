@@ -3,7 +3,10 @@
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\Api\BannersController;
 use App\Http\Controllers\Api\CategoriesController;
+use App\Http\Controllers\Api\CommentsController;
 use App\Http\Controllers\Api\expedisionController;
+use App\Http\Controllers\Api\PackagesController;
+use App\Http\Controllers\Api\ProdutsController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\api\testMailController;
 use Illuminate\Support\Facades\Route;
@@ -44,4 +47,22 @@ Route::group(['as' => 'expedisis', 'prefix' => 'expedisis'], function () {
 Route::group(['as' => 'banners', 'prefix' => 'banners'], function () {
     Route::resource('banners',BannersController::class);
     Route::get('getDataBanners',[BannersController::class,'getData']);
+});
+
+Route::group(['as' => 'comments', 'prefix' => 'comments'], function () {
+    Route::resource('comments',CommentsController::class);
+    Route::get('getDataComments/{user_id}',[CommentsController::class,'getData']);
+});
+
+Route::group(['as' => 'packages', 'prefix' => 'packages'], function () {
+    Route::resource('packages',PackagesController::class);
+    Route::get('getDataPackages',[PackagesController::class,'getData']);
+});
+
+Route::group(['as' => 'products', 'prefix' => 'products'], function () {
+    Route::resource('products',ProdutsController::class);
+    Route::get('getDataProducts',[ProdutsController::class,'getData']);
+    Route::post('addStock',[ProdutsController::class,'createStock']);
+    Route::post('updateStock/{id}',[ProdutsController::class,'updateStock']);
+    Route::post('deleteStock/{id}/{id_product}',[ProdutsController::class,'deleteStock']);
 });

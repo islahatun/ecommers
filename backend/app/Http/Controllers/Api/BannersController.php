@@ -27,6 +27,14 @@ class BannersController extends Controller
         //
     }
 
+    public function getData(){
+        $banners = Banner::all();
+
+        return response()->json([
+            'data'=>$banners,
+        ],200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -83,8 +91,9 @@ class BannersController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
         $validator = validator::make($request->all(), [
-            'image' => 'required',
+            'image' => 'required|image|file|max:1024',
             'status' => 'required'
         ]);
 
@@ -92,16 +101,13 @@ class BannersController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if (isset($request->image)) {
-            $lampiran           = base64_decode($request->image);
-            $lampiranFileName   = 'banners-' . $request->image;
+        if ($request->file('image')) {
 
-            $file               = Storage::disk('public_banners');
-            $file->put($lampiranFileName, $lampiran);
+            Storage::delete($request->oldImage);
 
-            $banners             = banner::where('id', $id)->update([
-                'image'             => $lampiranFileName,
-                'status'            => $request->status
+            $banners             = banner::where('id',$id)->update([
+                'image'          => $request->file('image')->store('banners'),
+                'status'         => $request->status
             ]);
 
             if ($banners) {
@@ -123,6 +129,12 @@ class BannersController extends Controller
      */
     public function destroy(string $id)
     {
+
+        dd($id);
+        $data       = banner::where('id',$id)->find();
+        if($data){
+            storage::delete($data->image);
+        }
         $banners    = banner::where('id', $id)->delete();
 
         if ($banners) {
