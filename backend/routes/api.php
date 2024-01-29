@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\Api\BanksController;
 use App\Http\Controllers\Api\BannersController;
 use App\Http\Controllers\Api\CategoriesController;
 use App\Http\Controllers\Api\CommentsController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Api\PackagesController;
 use App\Http\Controllers\Api\ProdutsController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\api\testMailController;
+use App\Http\Controllers\Api\transactiosController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -65,4 +67,13 @@ Route::group(['as' => 'products', 'prefix' => 'products'], function () {
     Route::post('addStock',[ProdutsController::class,'createStock']);
     Route::post('updateStock/{id}',[ProdutsController::class,'updateStock']);
     Route::post('deleteStock/{id}/{id_product}',[ProdutsController::class,'deleteStock']);
+});
+
+Route::group(['as' => 'Banks', 'prefix' => 'Banks'], function () {
+    Route::resource('Banks',BanksController::class);
+    Route::get('getDataBanks',[BanksController::class,'getData']);
+});
+
+Route::group(['as' => 'transaction', 'prefix' => 'transaction'], function () {
+    Route::post('transactionProduct',[transactiosController::class,'transactionProduct']);
 });
