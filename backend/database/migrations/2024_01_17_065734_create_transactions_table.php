@@ -17,17 +17,18 @@ return new class extends Migration
             $table->foreignId('product_id');
             $table->foreignId('package_id');
             $table->foreignId('expedisi_id');
+            $table->foreignId('bank_id');
             $table->string('no_order');
             $table->date('order_date');
             $table->integer('count');
-            $table->double('total',10,2);
+            $table->double('total',18,2);
             $table->enum('status_of_payment',['Y','N']);
             $table->string('proof_of_payment')->nullable();
             $table->string('no_resi')->nullable();
             $table->string('estimasi')->nullable();
             $table->string('no_rekening')->nullable();
             $table->integer('status_order')->nullable();
-            $table->double('shipping_cost')->default(0);
+            $table->double('shipping_cost',18,2)->default(0);
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('exit_products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_product');
+            $table->foreignId('product_id');
             $table->integer('exit_product');
             $table->date('date_of_exit');
             $table->timestamps();
