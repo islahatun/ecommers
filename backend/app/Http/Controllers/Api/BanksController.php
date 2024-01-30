@@ -48,7 +48,10 @@ class BanksController extends Controller
             return response()->json($validator->errors(),422);
         }
 
-        // multiple insert data
+        // multiple insert data,
+        /* bisa juga menggunakan :
+        bank::createMany()
+        */
         $banks   = bank::insert($request->input("data"));
 
         if($banks){
