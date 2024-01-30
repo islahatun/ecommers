@@ -76,5 +76,6 @@ Route::group(['as' => 'Banks', 'prefix' => 'Banks'], function () {
 
 Route::group(['as' => 'transaction', 'prefix' => 'transaction'], function () {
     Route::post('transactionProduct',[transactiosController::class,'transactionProduct']);
-    Route::get('getDataTransactionProduct/{user_id}',[transactiosController::class,'getData']);
+    Route::get('getDataTransactionProduct}',[transactiosController::class,'getDataTransactionAdmin']);
+    Route::get('getDataTransactionProduct/{user_id}',[transactiosController::class,'getDataTransactionUser']);
 });

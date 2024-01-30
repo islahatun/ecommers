@@ -27,8 +27,17 @@ class transactiosController extends Controller
         //
     }
 
-    public function getData(Request $request,string $userId){
+    public function getDataTransactionUser(Request $request,string $userId){
         $data = transaction::where('user_id',$userId)->get();
+
+        return response()->json([
+            'success'   => true,
+            'data'      => $data
+        ],200);
+    }
+
+    public function getDataTransactionAdmin(){
+        $data = transaction::all();
 
         return response()->json([
             'success'   => true,
