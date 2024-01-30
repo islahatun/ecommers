@@ -39,18 +39,17 @@ class BanksController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(),[
-            'bank_code' => 'required|unique:banks',
-            'bank_name' => 'required|unique:banks'
+            "data"              => 'required|array',
+            "data.*.bank_code"  => 'required|unique:banks',
+            "data.*.bank_name"  => 'required|unique:banks'
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(),422);
         }
 
-        $banks   = bank::create([
-            'bank_code' => $request->bank_code,
-            'bank_name' => $request->bank_name
-        ]);
+        // multiple insert data
+        $banks   = bank::insert($request->input("data"));
 
         if($banks){
             return response()->json([
