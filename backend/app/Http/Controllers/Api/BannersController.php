@@ -63,10 +63,6 @@ class BannersController extends Controller
                 ], 201);
             }
 
-            return response()->json([
-                'success'       => false,
-                'message'       => 'Banner fails to create'
-            ], 409);
         }
     }
 

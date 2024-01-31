@@ -49,6 +49,7 @@ class ProdutsController extends Controller
             'description'       => 'required',
             'price'             => 'required',
             'weight'            => 'required',
+            'product_image'     => 'required',
         ]);
 
         if ($validator->fails()) {

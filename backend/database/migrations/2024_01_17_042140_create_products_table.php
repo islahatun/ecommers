@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id');
             $table->string('product_name');
+            $table->string('product_image');
             $table->decimal('price',18,2);
             $table->text('description')->nullable();
             $table->integer('weight')->default(0);
