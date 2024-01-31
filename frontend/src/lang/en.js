@@ -1,6 +1,8 @@
 export default {
   text : {
     login     : "Login",
-    register  : "Register"
-  }
+    register  : "Register",
+    en        : "English",
+    id        : "Indonesia"
+  },
 }

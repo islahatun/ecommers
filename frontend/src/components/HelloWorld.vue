@@ -3,15 +3,9 @@
     <v-responsive class="text-center fill-height">
       <v-carousel>
         <v-carousel-item
-          src="https://source.unsplash.com/1200x400/?funiture"
-          cover="cover"
-        />
-        <v-carousel-item
-          src="https://source.unsplash.com/1200x400/?lighting"
-          cover="cover"
-        />
-        <v-carousel-item
-          src="https://source.unsplash.com/1200x400/?decoration"
+          v-for="(data, index) in imageArray"
+          :key="index"
+          src="data.url"
           cover="cover"
         />
       </v-carousel>
@@ -69,26 +63,45 @@
 </template>
 
 <script >
+import axios from "axios";
+import { apiUrl } from "@/api/index.js";
+
 export default {
   data: () => ({
     tab: null,
     icons: ["mdi-cart-arrow-down", "mdi-thumb-up-outline", "mdi-cube-scan"],
     transparent: "rgba(255, 255, 255, 0)",
+    imageArray: [],
   }),
 
-  methods:{
-    getNavigationLink(icon){
+  methods: {
+    getNavigationLink(icon) {
       if (icon === "mdi-cube-scan") {
-        return '/detail-product';
-      }else if(icon === "mdi-cart-arrow-down"){
-        return '/cart';
-      }else if(icon === "mdi-thumb-up-outline"){
-        return '/view';
+        return "/detail-product";
+      } else if (icon === "mdi-cart-arrow-down") {
+        return "/cart";
+      } else if (icon === "mdi-thumb-up-outline") {
+        return "/view";
       }
-    }
-  }
+    },
 
-}
+    getImages() {
+      axios.get(`${apiUrl}/banners/getDataImages`)
+        .then((response) => {
+
+          this.imageArray = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error atching Images: ", error);
+        });
+    },
+  },
+
+
+  mounted() {
+    this.getImages();
+  },
+};
 </script>
 
 <style scoped="scoped">

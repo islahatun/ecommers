@@ -4,15 +4,17 @@
       <v-icon icon="mdi-circle-slice-4" />
       <router-link to="/"  class="no-underline"> Base Preset </router-link>
     </v-app-bar-title>
+    <v-btn rounded="xl" size="small" @click="changeLanguage('en')" >{{$t('text.en')}}</v-btn>
+      <v-btn rounded="xl" size="small" @click="changeLanguage('id')" >{{$t('text.id')}}</v-btn>
     <v-btn>
-      <v-icon icon="mdi-login"/> Login
+      <v-icon icon="mdi-login"/> {{ $t('text.login') }}
 
       <v-dialog v-model="dialog" activator="parent" width="600">
 
         <v-card>
           <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
-            <v-tab :key="0" @click="tab= 0">Login</v-tab>
-            <v-tab :key="1" @click="tab= 1">Registrasi</v-tab>
+            <v-tab :key="0" @click="tab= 0">{{ $t('text.login') }}</v-tab>
+            <v-tab :key="1" @click="tab= 1">{{ $t('text.register') }}</v-tab>
           </v-tabs>
           <v-window v-model="tab">
             <v-window-item>
@@ -46,6 +48,8 @@
 </template>
 
 <script >
+import { apiUrl } from '@/api/index.js';
+import axios from 'axios';
   export default{
     data:()=>({
       dialog:false,
@@ -72,7 +76,15 @@
         ]
       }
 
-    })
+    }),
+    methods: {
+      changeLanguage(locale) {
+        this.$i18n.locale = locale;
+      }
+    },
+    fetchImageData(){
+      axios.get(apiUrl)
+    }
   }
 </script>
 
