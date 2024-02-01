@@ -5,7 +5,7 @@
         <v-carousel-item
           v-for="(data, index) in imageArray"
           :key="index"
-          src="data.url"
+          :src="data.url"
           cover="cover"
         />
       </v-carousel>
@@ -88,7 +88,6 @@ export default {
     getImages() {
       axios.get(`${apiUrl}/banners/getDataImages`)
         .then((response) => {
-
           this.imageArray = response.data.data;
         })
         .catch((error) => {

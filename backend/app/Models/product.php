@@ -10,5 +10,10 @@ class product extends Model
     use HasFactory;
 
     protected $guarded  =['id'];
+    protected $with     = ['categories'];
+
+    public function categories(){
+        return $this->belongsTo(category::class,'category_id','id');
+    }
 
 }

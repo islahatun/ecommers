@@ -35,6 +35,16 @@ class BannersController extends Controller
         ],200);
     }
 
+    public function getDataImages(){
+        $imagePaths = Storage::files('banners');
+
+        $images = array_map(function ($path) {
+            return ['url' => asset('storage/' . $path)];
+        }, $imagePaths);
+
+        return response()->json(['data' => $images]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

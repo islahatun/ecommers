@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\incoming_product;
@@ -30,10 +31,36 @@ class ProdutsController extends Controller
 
     public function getData()
     {
-        $banners = product::all();
+        $banners    = product::all();
+        $imagePaths = Storage::files('products');
+        $dataBanners = [];
+
+        // mengambil data file gambar
+        foreach ($banners as $b) {
+            $productImage   = $b->product_image;
+            /* fungsi in_array adalah untuk memeriksa apakah suatu nilai tertentu ada di dalam array.
+            dalam kasusu ini ingin memeriksa apakah ada productImage di dalam array imagePaths
+             */
+            if (in_array($productImage, $imagePaths)) {
+                $product_image  = asset('storage/' . $productImage);
+            } else {
+                $product_image  = null;
+            }
+            $dataBanners[] = [
+                'id'            => $b->id,
+                'category_id'   => $b->category_id,
+                'category_name' => $b->categories->category_name,
+                'product_image' => $product_image,
+                'price'         => $b->price,
+                'description'   => $b->description,
+                'weight'        => $b->weight,
+                'stock'         => $b->stock
+            ];
+        }
+        // mengambil data file gambar end
 
         return response()->json([
-            'data' => $banners,
+            'data' => $dataBanners,
         ], 200);
     }
 
@@ -56,13 +83,16 @@ class ProdutsController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $result = product::create([
-            'category_id'      => $request->category_id,
-            'product_name'     => $request->product_name,
-            'description'      => $request->description,
-            'price'            => $request->price,
-            'weight'           => $request->weight,
-        ]);
+        if ($request->file('product_image')) {
+            $result = product::create([
+                'category_id'      => $request->category_id,
+                'product_name'     => $request->product_name,
+                'description'      => $request->description,
+                'price'            => $request->price,
+                'weight'           => $request->weight,
+                'product_image'    => $request->file('product_image')->store('products'),
+            ]);
+        }
 
         if ($result) {
             return response()->json([
@@ -104,19 +134,24 @@ class ProdutsController extends Controller
             'description'       => 'required',
             'price'             => 'required',
             'weight'            => 'required',
+            'product_image'     => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $result = product::where('id', $id)->update([
-            'category_id'      => $request->category_id,
-            'product_name'     => $request->product_name,
-            'description'      => $request->description,
-            'price'            => $request->price,
-            'weight'           => $request->weight,
-        ]);
+        if ($request->file('product_image')) {
+            $result = product::where('id', $id)->update([
+                'category_id'      => $request->category_id,
+                'product_name'     => $request->product_name,
+                'description'      => $request->description,
+                'price'            => $request->price,
+                'weight'           => $request->weight,
+                'product_image'    => $request->file('product_image')->store('products'),
+            ]);
+        }
+
 
         if ($result) {
             return response()->json([
@@ -207,7 +242,7 @@ class ProdutsController extends Controller
                 'success'   => false,
                 'message'   => 'Stock fails create',
                 'errors'    => $validator->errors()
-            ],500);
+            ], 500);
         }
     }
 
@@ -264,8 +299,8 @@ class ProdutsController extends Controller
 
         try {
 
-            incoming_product::where('id',$id)->delete();
-            product::where('id',$id)->delete();
+            incoming_product::where('id', $id)->delete();
+            product::where('id', $id)->delete();
 
             // Jika kedua insert berhasil, commit transaksi
             DB::commit();
@@ -274,7 +309,6 @@ class ProdutsController extends Controller
                 'success'   => true,
                 'message'   => 'Stock deleted successfully'
             ]);
-
         } catch (\Exception $e) {
 
             // Jika ada kesalahan, batalkan transaksi

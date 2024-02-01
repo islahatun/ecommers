@@ -49,6 +49,7 @@ Route::group(['as' => 'expedisis', 'prefix' => 'expedisis'], function () {
 Route::group(['as' => 'banners', 'prefix' => 'banners'], function () {
     Route::resource('banners',BannersController::class);
     Route::get('getDataBanners',[BannersController::class,'getData']);
+    Route::get('getDataImages',[BannersController::class,'getDataImages']);
 });
 
 Route::group(['as' => 'comments', 'prefix' => 'comments'], function () {
