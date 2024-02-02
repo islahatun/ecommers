@@ -3,6 +3,9 @@ export default {
     login     : "Login",
     register  : "Register",
     en        : "English",
-    id        : "Indonesia"
+    id        : "Indonesia",
+    username  : "Username",
+    password  : "Password",
+    closeDialog : "Close"
   },
 }
