@@ -29,28 +29,35 @@ class ProdutsController extends Controller
         //
     }
 
-    public function getData()
+    public function getData(Request $request)
     {
-        $banners    = product::all();
+        $category_id = $request->input('category_id');
+        if($category_id == null){
+            $Products    = product::all();
+        }else{
+            $Products    = product::where('category_id',$category_id)->get();
+        }
+
         $imagePaths = Storage::files('products');
-        $dataBanners = [];
+        $dataProducts= [];
 
         // mengambil data file gambar
-        foreach ($banners as $b) {
+        foreach($Products as $b){
             $productImage   = $b->product_image;
             /* fungsi in_array adalah untuk memeriksa apakah suatu nilai tertentu ada di dalam array.
-            dalam kasusu ini ingin memeriksa apakah ada productImage di dalam array imagePaths
+            dalam kasus ini ingin memeriksa apakah ada productImage di dalam array imagePaths
              */
-            if (in_array($productImage, $imagePaths)) {
+            if(in_array($productImage,$imagePaths)){
                 $product_image  = asset('storage/' . $productImage);
-            } else {
+            }else{
                 $product_image  = null;
             }
-            $dataBanners[] = [
+            $dataProducts[] = [
                 'id'            => $b->id,
                 'category_id'   => $b->category_id,
                 'category_name' => $b->categories->category_name,
                 'product_image' => $product_image,
+                'product_name'  => $b->product_name,
                 'price'         => $b->price,
                 'description'   => $b->description,
                 'weight'        => $b->weight,
@@ -60,7 +67,7 @@ class ProdutsController extends Controller
         // mengambil data file gambar end
 
         return response()->json([
-            'data' => $dataBanners,
+            'data' => $dataProducts,
         ], 200);
     }
 
@@ -242,7 +249,7 @@ class ProdutsController extends Controller
                 'success'   => false,
                 'message'   => 'Stock fails create',
                 'errors'    => $validator->errors()
-            ], 500);
+            ],500);
         }
     }
 
@@ -299,8 +306,8 @@ class ProdutsController extends Controller
 
         try {
 
-            incoming_product::where('id', $id)->delete();
-            product::where('id', $id)->delete();
+            incoming_product::where('id',$id)->delete();
+            product::where('id',$id)->delete();
 
             // Jika kedua insert berhasil, commit transaksi
             DB::commit();
@@ -309,6 +316,7 @@ class ProdutsController extends Controller
                 'success'   => true,
                 'message'   => 'Stock deleted successfully'
             ]);
+
         } catch (\Exception $e) {
 
             // Jika ada kesalahan, batalkan transaksi

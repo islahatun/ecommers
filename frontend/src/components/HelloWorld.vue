@@ -11,18 +11,19 @@
       </v-carousel>
 
       <v-tabs v-model="tab" color="orange-lighten-1" align-tabs="end" mt="3">
-        <v-tab>All</v-tab>
-        <v-tab>Furniture</v-tab>
-        <v-tab>Lighting</v-tab>
-        <v-tab>Decoration</v-tab>
-        <v-tab>Electronics</v-tab>
+        <v-tab v-for="(dataCategory,index) in catgoryArray" :key="index" :value="dataCategory.id" @click="onTabChange(dataCategory.id)" >{{dataCategory.category_name}}</v-tab>
       </v-tabs>
 
       <v-window v-model="tab">
         <v-window-item v-for="n in 4" :key="n" :value="n">
           <v-container fluid="fluid">
             <v-row>
-              <v-col v-for="i in 6" :key="i" cols="12" md="2">
+              <v-col
+                v-for="(dataProducts, index) in allProducts"
+                :key="index"
+                cols="12"
+                md="2"
+              >
                 <v-hover v-slot="{ isHovering, props }">
                   <v-card
                     :elevation="isHovering ? 12 : 2"
@@ -30,15 +31,13 @@
                     v-bind="props"
                   >
                     <v-img
-                      :src="`https://picsum.photos/500/300?image=${
-                        i * n * 5 + 10
-                      }`"
-                      :lazy-src="`https://picsum.photos/10/6?image=${
-                        i * n * 5 + 10
-                      }`"
+                      :src="dataProducts.product_image"
+                      :lazy-src="dataProducts.product_image"
                       aspect-ratio="1"
                       cover="cover"
                     />
+                    <v-card-title>{{ dataProducts.product_name }}</v-card-title>
+                    <v-card-text>{{ dataProducts.price }}</v-card-text>
 
                     <div class="align-self-center">
                       <v-btn
@@ -47,7 +46,7 @@
                         :class="{ 'show-btns': isHovering }"
                         :color="transparent"
                         :icon="icon"
-                        :to="getNavigationLink(icon)"
+                        :to="getNavigationLink(icon, dataProducts.id)"
                       >
                       </v-btn>
                     </div>
@@ -72,33 +71,75 @@ export default {
     icons: ["mdi-cart-arrow-down", "mdi-thumb-up-outline", "mdi-cube-scan"],
     transparent: "rgba(255, 255, 255, 0)",
     imageArray: [],
+    allProducts: [],
+    catgoryArray: [],
   }),
 
   methods: {
-    getNavigationLink(icon) {
+    getNavigationLink(icon, productId) {
       if (icon === "mdi-cube-scan") {
-        return "/detail-product";
+        return `/detail-product/${productId}`;
       } else if (icon === "mdi-cart-arrow-down") {
-        return "/cart";
+        return `/cart/${productId}`;
       } else if (icon === "mdi-thumb-up-outline") {
         return "/view";
       }
     },
 
     getImages() {
-      axios.get(`${apiUrl}/banners/getDataImages`)
+      axios
+        .get(`${apiUrl}/banners/getDataImages`)
         .then((response) => {
           this.imageArray = response.data.data;
         })
         .catch((error) => {
-          console.error("Error atching Images: ", error);
+          console.error("Error fatching Images: ", error);
         });
     },
+
+    getAllProduct(categoryId) {
+      axios
+        .get(`${apiUrl}/products/getDataProducts`,{
+          params:{category_id : categoryId}
+        })
+        .then((response) => {
+          console.log(response.data.data);
+          this.allProducts = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error fatching Products: ", error);
+        });
+    },
+
+    getAllCategory() {
+      axios
+        .get(`${apiUrl}/categories/getDataCategories`)
+        .then((response) => {
+          this.catgoryArray = response.data.data;
+        })
+        .catch((error) => {
+          console.error("Error fatching categories: ", error);
+        });
+    },
+
+    onTabChange(categoryId){
+    this.getAllProduct(categoryId)
+  },
+
   },
 
 
+
+  computed : {
+    filteredProducts(){
+      // filter products by category
+      return this.allProducts.filter((product)=>product.category_id === this.tab)
+    }
+  },
+
   mounted() {
     this.getImages();
+    this.getAllCategory();
   },
 };
 </script>
