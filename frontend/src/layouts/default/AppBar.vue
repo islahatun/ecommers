@@ -103,10 +103,11 @@
                         password: this.login.password
                     })
                     .then(response => {
-                        console.log(response.data.token);
+                        console.log("You have successfully logged in",response.data.token);
+                      
                     })
                     .catch(error => {
-                        console.error(error.response.data.error);
+                        console.error(error);
                     });
             }
 

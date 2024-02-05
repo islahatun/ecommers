@@ -20,9 +20,9 @@ import {
 // multi languagge (Internationalization (i18n))
 import i18n from './lang'
 
+
 const app = createApp(App)
 app.use(i18n);
 registerPlugins(app)
-
 
 app.mount('#app')
