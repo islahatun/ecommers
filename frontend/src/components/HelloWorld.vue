@@ -103,7 +103,6 @@ export default {
           params:{category_id : categoryId}
         })
         .then((response) => {
-          console.log(response.data.data);
           this.allProducts = response.data.data;
         })
         .catch((error) => {

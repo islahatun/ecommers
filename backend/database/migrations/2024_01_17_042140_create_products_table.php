@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid'); // UUID (Universally Unique Identifier) akan digunakan sebagai parameter get 
             $table->foreignId('category_id');
             $table->string('product_name');
             $table->string('product_image');

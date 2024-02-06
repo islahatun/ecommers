@@ -65,6 +65,7 @@ Route::group(['as' => 'packages', 'prefix' => 'packages'], function () {
 Route::group(['as' => 'products', 'prefix' => 'products'], function () {
     Route::resource('products',ProdutsController::class);
     Route::get('getDataProducts',[ProdutsController::class,'getData']);
+    Route::get('getDataById',[ProdutsController::class,'getDataById']);
     Route::post('addStock',[ProdutsController::class,'createStock']);
     Route::post('updateStock/{id}',[ProdutsController::class,'updateStock']);
     Route::post('deleteStock/{id}/{id_product}',[ProdutsController::class,'deleteStock']);

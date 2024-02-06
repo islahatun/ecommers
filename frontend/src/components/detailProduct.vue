@@ -4,13 +4,14 @@
             <v-row>
                 <v-col>
                     <v-card>
-                        <v-img src="https://source.unsplash.com/1300x900/?decoration" cover="cover"/>
+                        <v-img :src="detaiProduct.product_image" cover="cover"/>
                     </v-card>
                 </v-col>
                 <v-col>
                     <v-card subtitle="" variant="outline">
                       <v-card-item>
-                        <v-card-title>Nama Produk</v-card-title>
+                        <v-card-title>{{ detaiProduct.product_name }}</v-card-title>
+                        <v-card-subtitle>{{detaiProduct.price }}</v-card-subtitle>
                         <v-rating v-model="rating"  :size="35" color="orange-lighten-1" active-color="orange-lighten-1"/>
                       </v-card-item>
                       <v-divider></v-divider>
@@ -19,13 +20,13 @@
             </v-row>
 
             <v-tabs v-model="tab" size="small" color="orange-lighten-1" class="mt-4" align-tabs="center">
-                <v-tab v-for="item in itemsContent" :key="item" :value="item">
+                <v-tab v-for="item in itemsContent" :key="item" :value="item" @click="getItemsContent(item)">
                     {{ item }}
                 </v-tab>
             </v-tabs>
 
             <v-window v-model="tab">
-                <v-window-item v-for="item in itemsContent" :key="item" :value="item">
+                <v-window-item v-for="item in itemsContent" :key="item" :value="item" >
                   <v-card color="basil" flat variant="outlined">
                     <v-card-text>{{text}}</v-card-text>
                   </v-card>
@@ -68,17 +69,49 @@
 </template>
 
 <script >
+
+import axios from "axios";
+import { apiUrl } from "@/api/index.js";
 export default{
   data:()=>({
-    tab:'Description',
+    tab:'',
     itemsContent:['Description', 'Additional Information', 'Shipping & Returns', 'Reviews',],
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    text: '',
     icons: [
                 'mdi-cart-arrow-down', 'mdi-thumb-up-outline', 'mdi-cube-scan'
             ],
-            transparent: 'rgba(255, 255, 255, 0)',
-            rating:3
-  })
+    transparent: 'rgba(255, 255, 255, 0)',
+    rating:3,
+    detaiProduct :[],
+    description : ''
+  }),
+
+  methods:{
+    getDetailProduct(){
+      const parameterValue = this.$route.params.productId;
+      axios.get(`${apiUrl}/products/getDataById`,{
+        params:{id : parameterValue}
+      })
+      .then((response)=>{
+        this.detaiProduct = response.data.data
+        this.description  = response.data.data.description
+
+      })
+    },
+
+    getItemsContent(tab){
+      this.getDetailProduct()
+      if(tab =='Description'){
+        this.text = this.description
+      } else{
+        this.text = 'kalklaks'
+      }
+    }
+  },
+
+  mounted() {
+    this.getDetailProduct()
+  }
 }
 </script>
 <style scoped="scoped">

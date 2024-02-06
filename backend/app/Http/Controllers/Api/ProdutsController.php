@@ -71,6 +71,44 @@ class ProdutsController extends Controller
         ], 200);
     }
 
+    public function getDataById(Request $request)
+    {
+        $id          = $request->input('id');
+        $Products    = product::find($id);
+
+
+        $imagePaths = Storage::files('products');
+
+        // mengambil data file gambar
+
+            $productImage   = $Products->product_image;
+            /* fungsi in_array adalah untuk memeriksa apakah suatu nilai tertentu ada di dalam array.
+            dalam kasus ini ingin memeriksa apakah ada productImage di dalam array imagePaths
+             */
+            if(in_array($productImage,$imagePaths)){
+                $product_image  = asset('storage/' . $productImage);
+            }else{
+                $product_image  = null;
+            }
+            $dataProducts = [
+                'id'            => $Products->id,
+                'category_id'   => $Products->category_id,
+                'category_name' => $Products->categories->category_name,
+                'product_image' => $product_image,
+                'product_name'  => $Products->product_name,
+                'price'         => $Products->price,
+                'description'   => $Products->description,
+                'weight'        => $Products->weight,
+                'stock'         => $Products->stock
+            ];
+
+        // mengambil data file gambar end
+
+        return response()->json([
+            'data' => $dataProducts,
+        ], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
