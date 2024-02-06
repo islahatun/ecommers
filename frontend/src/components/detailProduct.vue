@@ -35,17 +35,18 @@
 
             <v-card title="Same Product" class="text-center">
               <v-row>
-                <v-col v-for="i in 6" :key="i" cols="12" md="2">
+                <v-col v-for="(itemProduct,index) in ProductsByCatgory" :key="index" cols="12" md="2">
                     <v-hover v-slot="{isHovering, props}">
                         <v-card
                             :elevation="isHovering ? 12:2"
                             :class="{ 'on-hover': isHovering }"
                             v-bind="props" class="imgProduct">
                             <v-img
-                                src="https://source.unsplash.com/1300x900/?decoration"
+                                :src="itemProduct.product_image"
                                 aspect-ratio="1"
                                 cover="cover"/>
-
+                                <v-card-title>{{ itemProduct.product_name }}</v-card-title>
+                                <v-card-text>{{ itemProduct.price }}</v-card-text>
                             <div class="align-self-center">
                                 <v-btn
                                     v-for="(icon, index) in icons"
@@ -54,7 +55,7 @@
                                     :class="{ 'show-btns': isHovering }"
                                     :color="transparent"
                                     :icon="icon"
-                                    :to="icon === 'mdi-cube-scan' ?'/detail-product':null"
+                                    :to="getNavigationLink(icon, itemProduct.id)"
                                     >
                                 </v-btn>
                             </div>
@@ -83,19 +84,35 @@ export default{
     transparent: 'rgba(255, 255, 255, 0)',
     rating:3,
     detaiProduct :[],
-    description : ''
+    description : '',
+    dataByCategory : null,
+    ProductsByCatgory :[]
   }),
 
   methods:{
+    getNavigationLink(icon, productId) {
+    
+      if (icon === "mdi-cube-scan") {
+        return `/detail-product/${productId}`;
+      } else if (icon === "mdi-cart-arrow-down") {
+        return `/cart/${productId}`;
+      } else if (icon === "mdi-thumb-up-outline") {
+        return "/view";
+      }
+    },
+
     getDetailProduct(){
       const parameterValue = this.$route.params.productId;
       axios.get(`${apiUrl}/products/getDataById`,{
         params:{id : parameterValue}
       })
       .then((response)=>{
-        this.detaiProduct = response.data.data
-        this.description  = response.data.data.description
+        this.detaiProduct   = response.data.data
+        this.description    = response.data.data.description
+        this.dataByCategory = response.data.data.category_id
 
+      }). catch((error)=>{
+        console.error("Error fatching product: ", error);
       })
     },
 
@@ -106,11 +123,24 @@ export default{
       } else{
         this.text = 'kalklaks'
       }
+    },
+
+    getDataByCategory(){
+      this.getDetailProduct()
+      console.log(this.dataByCategory)
+      axios.get(`${apiUrl}/products/getDataProducts`,{
+        params:{category_id :this.dataByCategory }
+      }).then((response)=>{
+        this.ProductsByCatgory = response.data.data
+      }).catch((error)=>{
+        console.error("Error fatching categories: ", error);
+      })
     }
   },
 
   mounted() {
-    this.getDetailProduct()
+    this.getDetailProduct(),
+    this.getDataByCategory()
   }
 }
 </script>
