@@ -17,12 +17,12 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" persistent width="1024">
             <template v-slot:activator="{ props }">
-              <v-btn  rounded="lg" class="mx-1" color="blue-darken-1" elevation="6"  v-bind="props">Add</v-btn>
+              <v-btn  rounded="lg" class="mx-1" color="blue-darken-1" elevation="6"  v-bind="props">{{$t('text.create')}}</v-btn>
             </template>
 
             <v-card>
               <v-card-title color="green-darken-2">
-                <span class="text-h5">Edit User Profile</span>
+                <span class="text-h5">{{$t('text.create')}} User Profile</span>
               </v-card-title>
               <v-card-text>
                 <v-container>
@@ -119,12 +119,12 @@
 
           <v-dialog v-model="dialog" persistent width="1024">
             <template v-slot:activator="{ props }">
-              <v-btn  rounded="lg" class="mx-1" color="green-darken-1" elevation="6"  v-bind="props">Edit</v-btn>
+              <v-btn  rounded="lg" class="mx-1" color="green-darken-1" elevation="6"  v-bind="props">{{$t('text.edit')}}</v-btn>
             </template>
 
             <v-card>
               <v-card-title  color="green-darken-2">
-                <span class="text-h5">Add User Profile</span>
+                <span class="text-h5">{{$t('text.edit')}} User Profile</span>
               </v-card-title>
               <v-card-text>
                 <v-container>

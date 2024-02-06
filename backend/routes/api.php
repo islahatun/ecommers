@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ProdutsController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\api\testMailController;
 use App\Http\Controllers\Api\transactiosController;
+use App\Http\Controllers\Api\UsersConttroller;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -74,6 +75,11 @@ Route::group(['as' => 'products', 'prefix' => 'products'], function () {
 Route::group(['as' => 'Banks', 'prefix' => 'Banks'], function () {
     Route::resource('Banks',BanksController::class);
     Route::get('getDataBanks',[BanksController::class,'getData']);
+});
+
+Route::group(['as' => 'Users', 'prefix' => 'Users'], function () {
+    Route::resource('Users',UsersConttroller::class);
+    Route::get('getDataUsers',[UsersConttroller::class,'getData']);
 });
 
 Route::group(['as' => 'transaction', 'prefix' => 'transaction'], function () {

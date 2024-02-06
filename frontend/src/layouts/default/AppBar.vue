@@ -104,10 +104,13 @@
                     })
                     .then(response => {
                         console.log("You have successfully logged in",response.data.token);
-                      
+
+                        this.$router.push('/admin/dashboard');
+
                     })
                     .catch(error => {
-                        console.error(error);
+                      console.error(error);
+                      this.$vuetify.alert.error("Login failed. Please check your credentials.");
                     });
             }
 
