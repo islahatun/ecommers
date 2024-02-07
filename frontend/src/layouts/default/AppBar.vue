@@ -103,7 +103,7 @@
                         password: this.login.password
                     })
                     .then(response => {
-                        console.log("You have successfully logged in",response.data.token);
+                        console.log("You have successfully logged in",response);
 
                         this.$router.push('/admin/dashboard');
 

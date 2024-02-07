@@ -9,6 +9,14 @@ export default {
     closeDialog : "Close",
     create      : "Create",
     edit        : "Edit",
-    delete      : "Delete"
+    delete      : "Delete",
+    save        : "Save"
   },
+
+  users : {
+    name        : "Name",
+    email       : "Email",
+    password    : "Password",
+    created_et  : "Created At"
+  }
 }

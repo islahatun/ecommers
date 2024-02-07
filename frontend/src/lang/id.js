@@ -9,6 +9,13 @@ export default {
     closeDialog : "Tutup",
     create      : "Create",
     edit        : "Edit",
-    delete      : "Delete"
+    delete      : "Delete",
+    save        : "Simpan"
+  },
+  users : {
+    name        : "Nama",
+    email       : "Email",
+    password    : "Kata sandi",
+    created_ed  : "Dibuat Pada"
   }
 }
