@@ -7,9 +7,9 @@ export default {
     username    : "Nama Pengguna",
     password    : "Kata Sandi",
     closeDialog : "Tutup",
-    create      : "Create",
-    edit        : "Edit",
-    delete      : "Delete",
+    create      : "Baru",
+    edit        : "Ubah",
+    delete      : "Hapus",
     save        : "Simpan"
   },
   users : {
