@@ -125,7 +125,8 @@
                         item-key="id"
                         :headers="headers"
                         show-select="show-select"
-                        class="elevation-1 text-start">
+                        class="elevation-1 text-start"
+                        @click:row ="selectRow">
                         <template v-slot:item.created_at="{item}">
                             {{ formatDate(item.created_at) }}
                         </template>
@@ -202,14 +203,16 @@
                     })
                     .then((response) => {
                         console.log(response.data.data)
-                        this.getDataUsers();
+                        this.getDataUsers(); // mengambil data users agar datatables akan terisi kembali ketika selesai input
                         this.dialog = false
 
                     })
                     .catch(error => {
                         console.log('error post data: ', error)
+
                     })
                 },
+                
             async deleteItem() {
                 for (const selectedItem of this.users) {
                     try {
