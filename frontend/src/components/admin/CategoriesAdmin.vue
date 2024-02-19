@@ -21,20 +21,18 @@
                                 class="mx-1"
                                 color="blue-darken-1"
                                 elevation="6"
-                                v-bind="props">{{$t('text.create')}}
+                                v-bind="props">{{ $t("text.create") }}
                             </v-btn>
-
                         </template>
 
                         <v-card>
                             <v-form @submit.prevent="createItem">
                                 <v-card-title color="green-darken-2">
-                                    <span class="text-h5">{{$t('text.create')}}
-                                        User Profile</span>
+                                    <span class="text-h5">{{ $t("text.create") }}
+                                    </span>
                                 </v-card-title>
                                 <v-card-text>
                                     <v-container>
-
                                         <v-row>
                                             <v-col cols="12">
                                                 <v-text-field
@@ -44,37 +42,35 @@
                                                     required="required"></v-text-field>
                                             </v-col>
                                         </v-row>
-
                                     </v-container>
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-                                        {{ $t('text.closeDialog') }}
+                                        {{ $t("text.closeDialog") }}
                                     </v-btn>
                                     <v-btn color="blue-darken-1" variant="text" type="submit">
-                                        {{ $t('text.save') }}
+                                        {{ $t("text.save") }}
                                     </v-btn>
                                 </v-card-actions>
                             </v-form>
                         </v-card>
-
                     </v-dialog>
                     <v-btn
-                    rounded="lg"
-                    class="mx-1"
-                    color="green-darken-1"
-                    elevation="6"
-                    @click="editItem" v-if="selectedItem"
-                    v-bind="props">{{$t('text.edit')}}
-                </v-btn>
+                        rounded="lg"
+                        class="mx-1"
+                        color="green-darken-1"
+                        elevation="6"
+                        @click="editItem"
+                        v-if="selectedItem"
+                        v-bind="props">{{ $t("text.edit") }}
+                    </v-btn>
                     <v-btn
                         rounded="lg"
                         class="mx-1"
                         elevation="6"
                         color="red-darken-1"
-                        @click="deleteItem">Delete</v-btn>
-
+                        @click="deleteItem">Delete</v-btn >
                 </v-card-title>
 
                 <v-divider></v-divider>
@@ -85,10 +81,10 @@
                         item-key="id"
                         :headers="headers"
                         show-select="show-select"
-                        :item-value="item => item.id"
+                        :item-value="(item) => item.id"
                         class="elevation-1 text-start"
                         @click:row="selectRow">
-                        <template v-slot:item.created_at="{item}">
+                        <template v-slot:item.created_at="{ item }">
                             {{ formatDate(item.created_at) }}
                         </template>
                     </v-data-table>
@@ -118,7 +114,7 @@
                 }
             ],
             categories: [],
-            selectedItem:null,
+            selectedItem: null,
             models: {
                 category_name: ""
             },
@@ -130,7 +126,7 @@
 
         methods: {
             getDatacategories() {
-                axios
+                let dataUpdate = axios
                     .get(`${apiUrl}/categories/getDataCategories`)
                     .then((response) => {
                         this.categories = response.data.data
@@ -142,52 +138,69 @@
             formatDate(dataString) {
                 return moment(dataString).format('DD-MM-YYYY')
             },
+
+            // event dan item ini default dari veutify @click:row : ivent mengambil event
+            // sedangkan item mengambil data item yang ada di datatables
+            selectRow(event, item) {
+
+                this.selectedItem = item.item
+            },
+
             createItem() {
-                axios
-                    .post(
-                        `${apiUrl}/categories/categories`,
-                        {category_name: this.models.category_name}
-                    )
-                    .then((response) => {
-                        console.log(response.data.data)
-                        this.getDatacategories(); // mengambil data categories agar datatables akan terisi kembali ketika selesai input
-                        this.dialog = false
 
-                    })
-                    .catch(error => {
-                        console.log('error post data: ', error)
+                let dataUpdate = this.selectedItem
+                if (dataUpdate != null) {
+                    axios
+                        .put(
+                            `${apiUrl}/categories/categories/${dataUpdate.id}`,
+                            {category_name: this.models.category_name}
+                        )
+                        .then((response) => {
+                            console.log(response.data.data)
+                            this.getDatacategories(); // mengambil data categories agar datatables akan terisi kembali ketika selesai input
+                            this.dialog = false
 
-                    })
-                },
+                        })
+                        .catch(error => {
+                            console.log('error post data: ', error)
 
-                selectRow(item){
-                  console.log(item.category_name)
-                  this.selectedItem = item.category_name
-                },
+                        })
+                    } else {
+                    axios
+                        .post(
+                            `${apiUrl}/categories/categories`,
+                            {category_name: this.models.category_name}
+                        )
+                        .then((response) => {
+                            console.log(response.data.data)
+                            this.getDatacategories(); // mengambil data categories agar datatables akan terisi kembali ketika selesai input
+                            this.dialog = false
 
-                editItem(){
-                  console.log(this.selectedItem)
-                },
+                        })
+                        .catch(error => {
+                            console.log('error post data: ', error)
 
+                        })
+                    }
+
+            },
+
+            editItem() {
+                const data = this.selectedItem
+                this.dialog = true
+                this.models.category_name = data.category_name
+            },
 
             async deleteItem() {
-                for (const selectedItem of this.categories) {
+              let dataUpdate = this.selectedItem
                     try {
-                        await axios.delete(`${apiUrl}/categories/categories/${selectedItem.id}`);
+                        await axios.delete(`${apiUrl}/categories/categories/${dataUpdate.id}`);
                         // Remove the item from the local categories array
-                        const index = this
-                            .categories
-                            .findIndex((item) => item.id === selectedItem.id);
-                        if (index !== -1) {
-                            this
-                                .categories
-                                .splice(index, 1);
-                        }
-                        this.selectedItem = null;
+                        this.getDatacategories(); // mengambil data categories agar datatables akan terisi kembali ketika selesai dihapus
                     } catch (error) {
                         console.error('Error deleting item:', error);
                     }
-                }
+
             }
         },
 
