@@ -15,86 +15,65 @@
           ></v-text-field>
 
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" persistent width="1024">
+          <v-dialog v-model="dialog" persistent width="500">
             <template v-slot:activator="{ props }">
-              <v-btn  rounded="lg" class="mx-1" color="blue-darken-1" elevation="6"  v-bind="props">Add</v-btn>
+              <v-btn  rounded="lg" class="mx-1" color="blue-darken-1" elevation="6"  v-bind="props">{{$t('text.create')}}</v-btn>
+              <v-btn  rounded="lg" class="mx-1" color="green-darken-1" elevation="6"  v-bind="props">{{$t('text.edit')}}</v-btn>
             </template>
 
             <v-card>
               <v-card-title color="green-darken-2">
-                <span class="text-h5">Edit User Profile</span>
+                <span class="text-h5">{{$t('products.createProducts')}}</span>
               </v-card-title>
               <v-card-text>
                 <v-container>
                   <v-row>
                     <v-col
                       cols="12"
-                      sm="6"
-                      md="4"
                     >
                       <v-text-field
-                        label="Legal first name*"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        label="Legal middle name"
-                        hint="example of helper text only on focus"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        label="Legal last name*"
-                        hint="example of persistent helper text"
-                        persistent-hint
+                        :label="$t('products.productName')"
                         required
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
-                        label="Email*"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        label="Password*"
-                        type="password"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                    >
-                      <v-select
-                        :items="['0-17', '18-29', '30-54', '54+']"
-                        label="Age*"
-                        required
-                      ></v-select>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                    >
                       <v-autocomplete
-                        :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                        label="Interests"
-                        multiple
+                        :label="$t('products.productCategory')"
+                        :items="itemsCategory"
+                        :item-text="category_name"
+                        :item-value="id"
+                        :search-input.sync="search"
+                        required
                       ></v-autocomplete>
                     </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        :label="$t('products.productPrice')"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        :label="$t('products.productWeight')"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        :label="$t('products.productDescription')"
+                        required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-file-input
+                        :label="$t('products.productImage')"
+                        accept ="image/*"
+                        required
+                      ></v-file-input>
+                    </v-col>
+
                   </v-row>
                 </v-container>
-                <small>*indicates required field</small>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -117,111 +96,9 @@
 
           </v-dialog>
 
-          <v-dialog v-model="dialog" persistent width="1024">
-            <template v-slot:activator="{ props }">
-              <v-btn  rounded="lg" class="mx-1" color="green-darken-1" elevation="6"  v-bind="props">Edit</v-btn>
-            </template>
-
-            <v-card>
-              <v-card-title  color="green-darken-2">
-                <span class="text-h5">Add User Profile</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        label="Legal first name*"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        label="Legal middle name"
-                        hint="example of helper text only on focus"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                    >
-                      <v-text-field
-                        label="Legal last name*"
-                        hint="example of persistent helper text"
-                        persistent-hint
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        label="Email*"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        label="Password*"
-                        type="password"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                    >
-                      <v-select
-                        :items="['0-17', '18-29', '30-54', '54+']"
-                        label="Age*"
-                        required
-                      ></v-select>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                      sm="6"
-                    >
-                      <v-autocomplete
-                        :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                        label="Interests"
-                        multiple
-                      ></v-autocomplete>
-                    </v-col>
-                  </v-row>
-                </v-container>
-                <small>*indicates required field</small>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="dialog = false"
-                >
-                  Close
-                </v-btn>
-                <v-btn
-                  color="blue-darken-1"
-                  variant="text"
-                  @click="dialog = false"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-
-          </v-dialog>
 
           <v-btn  rounded="lg" class="mx-1" elevation="6" color="red-darken-1">
-            <v-icon></v-icon>
-            Delete
+            {{$t('text.delete') }}
           </v-btn>
 
         </v-card-title>
@@ -272,6 +149,8 @@
 </template>
 
 <script>
+    import axios from "axios";
+    import {apiUrl} from "@/api/index.js";
 export default {
     data :()=>({
       ratio: 'rounded-xl',
@@ -314,7 +193,22 @@ export default {
             stock: false,
           },
         ],
-    })
+        itemsCategory:[]
+    }),
+
+    methods: {
+      getCatgeory(){
+        axios.get(`${apiUrl}/categories/getDataCategories`)
+        .then((response)=>{
+          console.log(response.data.data)
+         this.itemsCategory = response.data.data
+        })
+      }
+    },
+
+    mounted(){
+      this.getCatgeory()
+    }
   }
 </script>
 

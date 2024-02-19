@@ -47,6 +47,7 @@
                                     <v-text-field
                                         v-model="register.password"
                                         :rules="rules.Password"
+                                        type="password"
                                         label="$t('password')"/>
                                     <v-btn type="submit" color="primary">{{ $t('text.register') }}</v-btn>
                                 </v-form>

@@ -53,6 +53,21 @@ const routes = [
         path:'orders',
         name:'Orders',
         component:()=>import('@/views/admin/viewAdminOrders.vue')
+      },
+      {
+        path:'banks',
+        name:'Banks',
+        component:()=>import('@/views/admin/viewAdminBanks.vue')
+      },
+      {
+        path:'categories',
+        name:'Categories',
+        component:()=>import('@/views/admin/viewAdminCategories.vue')
+      },
+      {
+        path:'banners',
+        name:'Banners',
+        component:()=>import('@/views/admin/viewAdminBanners.vue')
       }
     ]
   }

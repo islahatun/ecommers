@@ -27,7 +27,9 @@
           <v-list-item :to="'/admin/product'" prepend-icon="mdi-account" title="Product" value="Product"></v-list-item>
           <v-list-item :to="'/admin/complaint'" prepend-icon="mdi-account" title="Complaint" value="Complaint"></v-list-item>
           <v-list-item :to="'/admin/orders'" prepend-icon="mdi-account" title="Orders" value="Orders"></v-list-item>
-
+          <v-list-item :to="'/admin/banks'" prepend-icon="mdi-account" title="Banks" value="Banks"></v-list-item>
+          <v-list-item :to="'/admin/banners'" prepend-icon="mdi-account" title="Banners" value="Banners"></v-list-item>
+          <v-list-item :to="'/admin/categories'" prepend-icon="mdi-account" title="Categoris" value="Categoris"></v-list-item>
         </v-list>
       </v-navigation-drawer>
 </template>

@@ -30,6 +30,13 @@ class BannersController extends Controller
     public function getData(){
         $banners = Banner::all();
 
+        $imagePaths = Storage::files('banners');
+
+        foreach($banners as $b){
+
+        }
+
+
         return response()->json([
             'data'=>$banners,
         ],200);
@@ -51,8 +58,8 @@ class BannersController extends Controller
     public function store(Request $request)
     {
         $validator = validator::make($request->all(), [
-            'image' => 'required|image|file|max:1024',
-            'status' => 'required'
+            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'status'    => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -135,8 +142,6 @@ class BannersController extends Controller
      */
     public function destroy(string $id)
     {
-
-        dd($id);
         $data       = banner::where('id',$id)->find();
         if($data){
             storage::delete($data->image);
