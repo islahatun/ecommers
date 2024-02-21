@@ -15,18 +15,10 @@
 
                     <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" persistent="persistent" width="500">
-                        <template v-slot:activator="{ props }">
-                            <v-btn
-                                rounded="lg"
-                                class="mx-1"
-                                color="blue-darken-1"
-                                elevation="6"
-                                v-bind="props">{{ $t("text.create") }}
-                            </v-btn>
-                        </template>
+
 
                         <v-card>
-                            <v-form @submit.prevent="createItem">
+                            <v-form @submit.prevent="submit" ref="formInput">
                                 <v-card-title color="green-darken-2">
                                     <span class="text-h5">{{ $t("text.create") }}
                                     </span>
@@ -57,6 +49,14 @@
                         </v-card>
                     </v-dialog>
                     <v-btn
+                                rounded="lg"
+                                class="mx-1"
+                                color="blue-darken-1"
+                                @click="createItem"
+                                elevation="6"
+                                >{{ $t("text.create") }}
+                            </v-btn>
+                    <v-btn
                         rounded="lg"
                         class="mx-1"
                         color="green-darken-1"
@@ -80,9 +80,8 @@
                         :items="categories"
                         item-key="id"
                         :headers="headers"
-                        show-select="show-select"
                         :item-value="(item) => item.id"
-                        class="elevation-1 text-start"
+                        class="elevation-1 text-start { 'selected-row': selectedItem === item }"
                         @click:row="selectRow">
                         <template v-slot:item.created_at="{ item }">
                             {{ formatDate(item.created_at) }}
@@ -98,6 +97,7 @@
     import axios from "axios";
     import moment from "moment";
     import {apiUrl} from "@/api/index.js";
+
 
     export default {
         data: () => ({
@@ -126,7 +126,7 @@
 
         methods: {
             getDatacategories() {
-                let dataUpdate = axios
+                 axios
                     .get(`${apiUrl}/categories/getDataCategories`)
                     .then((response) => {
                         this.categories = response.data.data
@@ -142,11 +142,21 @@
             // event dan item ini default dari veutify @click:row : ivent mengambil event
             // sedangkan item mengambil data item yang ada di datatables
             selectRow(event, item) {
-
                 this.selectedItem = item.item
             },
 
-            createItem() {
+            createItem(){
+              this.dialog = true
+              this.resetFrom();
+            },
+
+            editItem() {
+                const data = this.selectedItem
+                this.dialog = true
+                this.models.category_name = data.category_name
+            },
+
+            submit() {
 
                 let dataUpdate = this.selectedItem
                 if (dataUpdate != null) {
@@ -156,7 +166,7 @@
                             {category_name: this.models.category_name}
                         )
                         .then((response) => {
-                            console.log(response.data.data)
+                            console.log(response)
                             this.getDatacategories(); // mengambil data categories agar datatables akan terisi kembali ketika selesai input
                             this.dialog = false
 
@@ -185,22 +195,41 @@
 
             },
 
-            editItem() {
-                const data = this.selectedItem
-                this.dialog = true
-                this.models.category_name = data.category_name
-            },
-
             async deleteItem() {
-              let dataUpdate = this.selectedItem
-                    try {
-                        await axios.delete(`${apiUrl}/categories/categories/${dataUpdate.id}`);
-                        // Remove the item from the local categories array
-                        this.getDatacategories(); // mengambil data categories agar datatables akan terisi kembali ketika selesai dihapus
-                    } catch (error) {
-                        console.error('Error deleting item:', error);
-                    }
 
+                this
+                    .$swal
+                    .fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    })
+                    .then(async (result) => {
+                        if (result.isConfirmed) {
+                            let dataUpdate = this.selectedItem
+                            try {
+                                await axios.delete(`${apiUrl}/categories/categories/${dataUpdate.id}`);
+                                // Remove the item from the local categories array
+                                this.getDatacategories(); // mengambil data categories agar datatables akan terisi kembali ketika selesai dihapus
+                            } catch (error) {
+                                console.error('Error deleting item:', error);
+                            }
+                            this
+                                .$swal
+                                .fire(
+                                    {title: "Deleted!", text: "Your file has been deleted.", icon: "success"}
+                                );
+
+                        }
+                    });
+            },
+            resetFrom(){
+              this.models = {category_name:""}
+              this.selectedItem = null
             }
         },
 
@@ -210,4 +239,8 @@
     }
 </script>
 
-<style></style>
+<style>
+.selected-row {
+  background-color: lightblue; /* Atur warna latar belakang sesuai keinginan Anda */
+}
+</style>
