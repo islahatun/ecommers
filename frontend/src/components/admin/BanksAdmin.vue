@@ -15,25 +15,9 @@
 
                     <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" persistent="persistent" width="500">
-                        <template v-slot:activator="{ props }">
-                            <v-btn
-                                rounded="lg"
-                                class="mx-1"
-                                color="blue-darken-1"
-                                elevation="6"
-                                v-bind="props">{{$t('text.create')}}
-                            </v-btn>
-                            <v-btn
-                                rounded="lg"
-                                class="mx-1"
-                                color="green-darken-1"
-                                elevation="6"
-                                v-bind="props">{{$t('text.edit')}}
-                            </v-btn>
-                        </template>
 
                         <v-card>
-                            <v-form @submit.prevent="createItem">
+                            <v-form @submit.prevent="submit">
                                 <v-card-title color="green-darken-2">
                                     <span class="text-h5">{{$t('text.create')}}
                                         User Profile</span>
@@ -73,12 +57,29 @@
                         </v-card>
 
                     </v-dialog>
-
+                    <v-btn
+                                rounded="lg"
+                                class="mx-1"
+                                color="blue-darken-1"
+                                elevation="6"
+                                @click="createItem"
+                                >{{$t('text.create')}}
+                            </v-btn>
+                            <v-btn
+                                rounded="lg"
+                                class="mx-1"
+                                color="green-darken-1"
+                                elevation="6"
+                                @click="editItem"
+                                v-if="selectedItem"
+                                >{{$t('text.edit')}}
+                            </v-btn>
                     <v-btn
                         rounded="lg"
                         class="mx-1"
                         elevation="6"
                         color="red-darken-1"
+                        v-if="selectedItem"
                         @click="deleteItem">Delete</v-btn>
 
                 </v-card-title>
@@ -90,7 +91,7 @@
                         :items="banks"
                         item-key="id"
                         :headers="headers"
-                        show-select="show-select"
+                        :item-value="(item) => item.id"
                         class="elevation-1 text-start"
                         @click:row="selectRow">
                         <template v-slot:item.created_at="{item}">
@@ -126,6 +127,7 @@
                 }
             ],
             banks: [],
+            selectedItem:null,
             models: {
                 bank_code: '',
                 bank_name: ""
@@ -148,10 +150,46 @@
                         console.error('Error Fatching data User:', error)
                     })
                 },
+
             formatDate(dataString) {
                 return moment(dataString).format('DD-MM-YYYY')
             },
-            createItem() {
+            // event dan data ini default dari @click:row
+            selectRow(event,item){
+              this.selectedItem =item.item
+            },
+
+            createItem(){
+              this.resetForm()
+              this.dialog = true
+            },
+
+            editItem(){
+              const data = this.selectedItem
+              this.models= {bank_code:data.bank_code,bank_name:data.bank_name}
+              this.dialog = true
+            },
+
+            submit() {
+               let dataUpdate = this.selectedItem
+               if(dataUpdate){
+                axios
+                    .put(`${apiUrl}/Banks/Banks/${dataUpdate.id}`, {
+                                bank_code: this.models.bank_code,
+                                bank_name: this.models.bank_name
+
+                    })
+                    .then((response) => {
+                        console.log(response.data.data)
+                        this.getDataBanks(); // mengambil data Banks agar datatables akan terisi kembali ketika selesai input
+                        this.dialog = false
+
+                    })
+                    .catch(error => {
+                        console.log('error post data: ', error)
+
+                    })
+               }else{
                 axios
                     .post(`${apiUrl}/Banks/Banks`, {
                       // mengirim data multiple
@@ -173,26 +211,44 @@
                         console.log('error post data: ', error)
 
                     })
+               }
                 },
 
             async deleteItem() {
-                for (const selectedItem of this.banks) {
-                    try {
-                        await axios.delete(`${apiUrl}/Banks/Banks/${selectedItem.id}`);
-                        // Remove the item from the local Banks array
-                        const index = this
-                            .Banks
-                            .findIndex((item) => item.id === selectedItem.id);
-                        if (index !== -1) {
+              this
+                    .$swal
+                    .fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    })
+                    .then(async (result) => {
+                        if (result.isConfirmed) {
+                            let dataUpdate = this.selectedItem
+                            try {
+                                await axios.delete(`${apiUrl}/Banks/Banks/${dataUpdate.id}`);
+                                // Remove the item from the local Banks array
+                                this.getDataBanks(); // mengambil data categories agar datatables akan terisi kembali ketika selesai dihapus
+                            } catch (error) {
+                                console.error('Error deleting item:', error);
+                            }
                             this
-                                .Banks
-                                .splice(index, 1);
+                                .$swal
+                                .fire(
+                                    {title: "Deleted!", text: "Your file has been deleted.", icon: "success"}
+                                );
+
                         }
-                        this.selectedItem = null;
-                    } catch (error) {
-                        console.error('Error deleting item:', error);
-                    }
-                }
+                    });
+            },
+
+            resetForm(){
+              this.models = {bank_code:"",bank_name:""}
+              this.selectedItem = null
             }
         },
 
