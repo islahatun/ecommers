@@ -38,21 +38,35 @@ class BanksController extends Controller
      */
     public function store(Request $request)
     {
+
+
+// data yang multipe
         $validator = validator::make($request->all(),[
             "data"              => 'required|array',
             "data.*.bank_code"  => 'required|unique:banks',
-            "data.*.bank_name"  => 'required|unique:banks'
+            "data.*.bank_name"  => 'required|unique:banks',
+            "data.*.created_at"  => 'required'
         ]);
+
+        // data input biasa
+        // $validator = validator::make($request->all(),[
+        //     "bank_code"  => 'required|unique:banks',
+        //     "bank_name"  => 'required|unique:banks'
+        // ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(),422);
         }
 
         // multiple insert data,
-        /* bisa juga menggunakan :
-        bank::createMany()
-        */
         $banks   = bank::insert($request->input("data"));
+
+        /* bisa juga menggunakan jika inputan biasa:
+        $banks   = bank::create([
+            'bank_code'=>$request->bank_code,
+            'bank_name'=>$request->bank_name
+        ]);
+        */
 
         if($banks){
             return response()->json([
@@ -99,7 +113,7 @@ class BanksController extends Controller
 
         $banks   = bank::where('id',$id)->update([
             'bank_code' =>$request->bank_code,
-            'bank_name' =>$request->bank_name
+            'bank_name' =>$request->bank_name,
         ]);
 
         if($banks){
