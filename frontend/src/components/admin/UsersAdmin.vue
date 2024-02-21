@@ -15,25 +15,9 @@
 
                     <v-spacer></v-spacer>
                     <v-dialog v-model="dialog" persistent="persistent" width="500">
-                        <template v-slot:activator="{ props }">
-                            <v-btn
-                                rounded="lg"
-                                class="mx-1"
-                                color="blue-darken-1"
-                                elevation="6"
-                                v-bind="props">{{$t('text.create')}}
-                            </v-btn>
-                            <v-btn
-                                rounded="lg"
-                                class="mx-1"
-                                color="green-darken-1"
-                                elevation="6"
-                                v-bind="props">{{$t('text.edit')}}
-                            </v-btn>
-                        </template>
 
                         <v-card>
-                            <v-form @submit.prevent="createItem">
+                            <v-form @submit.prevent="submit">
                                 <v-card-title color="green-darken-2">
                                     <span class="text-h5">{{$t('text.create')}}
                                         User Profile</span>
@@ -62,6 +46,7 @@
                                                     :rules="rules.password"
                                                     v-model="models.password"
                                                     type="password"
+                                                    v-if="isNewUser"
                                                     required="required"></v-text-field>
                                             </v-col>
                                         </v-row>
@@ -81,39 +66,28 @@
                         </v-card>
 
                     </v-dialog>
-
-                    <!-- <v-dialog v-model="dialog" persistent="persistent" width="1024"> <template
-                    v-slot:activator="{ props }"> <v-btn rounded="lg" class="mx-1"
-                    color="green-darken-1" elevation="6" v-bind="props">{{$t('text.edit')}}</v-btn>
-                    </template> <v-card> <v-card-title color="green-darken-2"> <span
-                    class="text-h5">{{$t('text.edit')}} User Profile</span> </v-card-title>
-                    <v-card-text> <v-container> <v-row> <v-col cols="12" sm="6" md="4">
-                    <v-text-field label="Legal first name*" required="required"></v-text-field>
-                    </v-col> <v-col cols="12" sm="6" md="4"> <v-text-field label="Legal middle name"
-                    hint="example of helper text only on focus"></v-text-field> </v-col> <v-col
-                    cols="12" sm="6" md="4"> <v-text-field label="Legal last name*" hint="example of
-                    persistent helper text" persistent-hint="persistent-hint"
-                    required="required"></v-text-field> </v-col> <v-col cols="12"> <v-text-field
-                    label="Email*" required="required"></v-text-field> </v-col> <v-col cols="12">
-                    <v-text-field label="Password*" type="password"
-                    required="required"></v-text-field> </v-col> <v-col cols="12" sm="6"> <v-select
-                    :items="['0-17', '18-29', '30-54', '54+']" label="Age*"
-                    required="required"></v-select> </v-col> <v-col cols="12" sm="6">
-                    <v-autocomplete :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball',
-                    'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']" label="Interests"
-                    multiple="multiple"></v-autocomplete> </v-col> </v-row> </v-container>
-                    <small>*indicates required field</small> </v-card-text> <v-card-actions>
-                    <v-spacer></v-spacer> <v-btn color="blue-darken-1" variant="text" @click="dialog
-                    = false"> Close </v-btn> <v-btn color="blue-darken-1" variant="text"
-                    @click="dialog = false"> Save </v-btn> </v-card-actions> </v-card> </v-dialog>
-                    -->
-
+                    <v-btn
+                        rounded="lg"
+                        class="mx-1"
+                        color="blue-darken-1"
+                        elevation="6"
+                        @click="createItem">{{$t('text.create')}}
+                    </v-btn>
+                    <v-btn
+                        rounded="lg"
+                        class="mx-1"
+                        color="green-darken-1"
+                        elevation="6"
+                        @click="editItem"
+                        v-if="selectedItem">{{$t('text.edit')}}
+                    </v-btn>
                     <v-btn
                         rounded="lg"
                         class="mx-1"
                         elevation="6"
                         color="red-darken-1"
-                        @click="deleteItem">Delete</v-btn>
+                        @click="deleteItem"
+                        v-if="selectedItem">Delete</v-btn>
 
                 </v-card-title>
 
@@ -124,9 +98,8 @@
                         :items="users"
                         item-key="id"
                         :headers="headers"
-                        show-select="show-select"
                         class="elevation-1 text-start"
-                        @click:row ="selectRow">
+                        @click:row="selectRow">
                         <template v-slot:item.created_at="{item}">
                             {{ formatDate(item.created_at) }}
                         </template>
@@ -147,22 +120,22 @@
             ratio: 'rounded-xl',
             dialog: false,
             search: '',
+            isNewUser:true,
             headers: [
                 {
                     title: "Name",
-                    align: "center",
                     value: "name"
                 }, {
                     title: "E Mail",
-                    align: "center",
                     value: "email"
                 }, {
                     title: "Created At",
-                    align: "center",
                     value: "created_at"
                 }
             ],
             users: [],
+            selectedItem: null,
+            url:'',
             models: {
                 name: '',
                 email: "",
@@ -176,6 +149,7 @@
                     value => (value && value.length >= 6) || "Password must be more than 5 characters"
                 ]
             }
+
 
         }),
 
@@ -193,44 +167,89 @@
             formatDate(dataString) {
                 return moment(dataString).format('DD-MM-YYYY')
             },
+            selectRow(event, item) {
+                this.selectedItem = item.item
+            },
             createItem() {
-                axios
-                    .post(`${apiUrl}/Users/Users`, {
-                        name: this.models.name,
-                        email: this.models.email,
-                        password: this.models.password
-
-                    })
-                    .then((response) => {
-                        console.log(response.data.data)
-                        this.getDataUsers(); // mengambil data users agar datatables akan terisi kembali ketika selesai input
-                        this.dialog = false
-
-                    })
-                    .catch(error => {
-                        console.log('error post data: ', error)
-
-                    })
-                },
-                
-            async deleteItem() {
-                for (const selectedItem of this.users) {
-                    try {
-                        await axios.delete(`${apiUrl}/Users/Users/${selectedItem.id}`);
-                        // Remove the item from the local users array
-                        const index = this
-                            .users
-                            .findIndex((item) => item.id === selectedItem.id);
-                        if (index !== -1) {
-                            this
-                                .users
-                                .splice(index, 1);
-                        }
-                        this.selectedItem = null;
-                    } catch (error) {
-                        console.error('Error deleting item:', error);
-                    }
+                this.dialog = true
+            },
+            editItem() {
+                let data = this.selectedItem
+                this.isNewUser =false
+                this.models = {
+                    name: data.name,
+                    email: data.email
                 }
+                this.dialog = true
+            },
+            submit() {
+                let updateData = this.selectedItem
+                if (updateData) {
+                    axios
+                        .put(`${apiUrl}/Users/Users/${updateData.id}`, {
+                            name: this.models.name,
+                            email: this.models.email
+
+                        })
+                        .then((response) => {
+                            console.log(response.data.data)
+                            this.getDataUsers(); // mengambil data users agar datatables akan terisi kembali ketika selesai input
+                            this.dialog = false
+
+                        })
+                        .catch(error => {
+                            console.log('error post data: ', error)
+
+                        })
+                    } else {
+                    axios
+                        .post(`${apiUrl}/Users/Users`, {
+                            name: this.models.name,
+                            email: this.models.email,
+                            password: this.models.password
+
+                        })
+                        .then((response) => {
+                            console.log(response.data.data)
+                            this.getDataUsers(); // mengambil data users agar datatables akan terisi kembali ketika selesai input
+                            this.dialog = false
+
+                        })
+                        .catch(error => {
+                            console.log('error post data: ', error)
+
+                        })
+                    }
+            },
+
+            async deleteItem() {
+              this.$swal
+        .fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            let dataUpdate = this.selectedItem;
+            try {
+              await axios.delete(`${apiUrl}/Users/Users/${dataUpdate.id}`);
+              // Remove the item from the local Users array
+              this.getDataUsers(); // mengambil data categories agar datatables akan terisi kembali ketika selesai dihapus
+            } catch (error) {
+              console.error("Error deleting item:", error);
+            }
+            this.$swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+          }
+        });
             }
         },
 
