@@ -134,7 +134,7 @@
                 }
             ],
             users: [],
-            selectedItem: null,
+            selectedItem: false,
             url:'',
             models: {
                 name: '',
