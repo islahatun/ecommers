@@ -88,11 +88,15 @@
                         :item-value="(item) => item.id"
                         class="elevation-1 text-start { 'selected-row': selectedItem === item }"
                         @click:row="selectRow">
-                        <template v-slot:item.image="{ item }"> <v-card class="my-2" elevation="2"
-                        rounded> <v-img :src="`${item.image}`" height="66" width="100" cover ></v-img> </v-card>
+                        <template v-slot:item.image="{ item }">
+                            <v-card class="my-2" elevation="2" rounded="rounded">
+                                <v-img :src="`${item.image}`" height="66" width="100" cover="cover"></v-img>
+                            </v-card>
                         </template>
-                        <template v-slot:item.created_at="{ item }"> {{ formatDate(item.created_at)
-                        }} </template>
+                        <template v-slot:item.created_at="{ item }">
+                            {{ formatDate(item.created_at)
+                        }}
+                        </template>
                     </v-data-table>
                 </v-card>
             </v-card>
@@ -169,9 +173,10 @@
             },
 
             editItem() {
+              console.log(this.selectedItem)
                 const data = this.selectedItem;
                 this.models = {
-                    image: data.image,
+                    // image: data.image,
                     status: data.status
                 };
                 this.dialog = true;
@@ -179,18 +184,16 @@
 
             submit() {
                 let dataUpdate = this.selectedItem;
-                let image = this
-                    .getImage
-                    console
-                    .log(image.name)
+                let image = this.getImage
+                const formData = new FormData();
+                formData.append('image', image);
+                formData.append('status', this.models.status)
                 if (dataUpdate) {
                     axios
-                        .put(`${apiUrl}/banners/banners/${dataUpdate.id}`, {
+                        .put(`${apiUrl}/banners/banners/${dataUpdate.id}`,formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data', // Penting untuk mengatur tipe konten
-                            },
-                            image: image,
-                            status: this.models.status
+                            }
                         })
                         .then((response) => {
                             console.log(response.data.data);
@@ -201,15 +204,10 @@
                             console.log("error post data: ", error);
                         });
                 } else {
-                    const formData = new FormData();
-                    formData.append('image', image);
                     axios
                         .post(`${apiUrl}/banners/banners`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data', // Penting untuk mengatur tipe konten
-                            },
-                            params: {
-                                status: this.models.status
                             }
                         })
                         .then((response) => {
@@ -239,7 +237,7 @@
                         if (result.isConfirmed) {
                             let dataUpdate = this.selectedItem;
                             try {
-                                await axios.delete(`${apiUrl}/Banners/Banners/${dataUpdate.id}`);
+                                await axios.delete(`${apiUrl}/banners/banners/${dataUpdate.id}`);
                                 // Remove the item from the local Banners array
                                 this.getDataBanners(); // mengambil data categories agar datatables akan terisi kembali ketika selesai dihapus
                             } catch (error) {
