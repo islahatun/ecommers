@@ -28,17 +28,39 @@ class BannersController extends Controller
     }
 
     public function getData(){
-        $banners = Banner::all();
+        $banners        = Banner::all();
 
-        $imagePaths = Storage::files('banners');
-
+        $imagePaths     = Storage::files('banners');
+        $dataBanners    =[];
         foreach($banners as $b){
+            $getPic     = $b->image;
+            $imagePaths = Storage::files('banners');
+
+            /* fungsi in_array adalah untuk memeriksa apakah suatu nilai tertentu ada di dalam array.
+            dalam kasus ini ingin memeriksa apakah ada productImage di dalam array imagePaths
+             */
+            if(in_array($getPic,$imagePaths)){
+                $banner_image  = asset('storage/' . $getPic);
+            }else{
+                $banner_image  = null;
+            }
+            $status     = "Publish";
+            if($b->status != 1){
+                $status = "private";
+            }
+            $dataBanners[] = [
+                'id'         => $b->id,
+                'status'     => $status,
+                'image'      => $banner_image,
+                'created_at' => $b->created_at,
+
+            ];
 
         }
 
 
         return response()->json([
-            'data'=>$banners,
+            'data'=>$dataBanners,
         ],200);
     }
 
@@ -142,7 +164,8 @@ class BannersController extends Controller
      */
     public function destroy(string $id)
     {
-        $data       = banner::where('id',$id)->find();
+        dd($id);
+        $data       = banner::find();
         if($data){
             storage::delete($data->image);
         }

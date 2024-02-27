@@ -29,8 +29,7 @@
                                                     :label="$t('banners.image')"
                                                     :rules="rules.image"
                                                     v-model="models.image"
-                                                    required="required"
-                                                    @change="onFileChange"></v-file-input>
+                                                    required="required"></v-file-input>
                                             </v-col>
                                             <v-col cols="12">
                                                 <v-text-field
@@ -160,12 +159,12 @@
                 this.selectedItem = item.item;
             },
 
-            onFileChange(e) {
-                const file = e
-                    .target
-                    .files[0]
-                this.getImage = file
-            },
+            // onFileChange(e) {
+            //     const file = e
+            //         .target
+            //         .files[0]
+            //     this.getImage = file
+            // },
 
             createItem() {
                 this.resetForm();
@@ -173,7 +172,6 @@
             },
 
             editItem() {
-              console.log(this.selectedItem)
                 const data = this.selectedItem;
                 this.models = {
                     // image: data.image,
@@ -184,9 +182,9 @@
 
             submit() {
                 let dataUpdate = this.selectedItem;
-                let image = this.getImage
+                // let image = this.getImage
                 const formData = new FormData();
-                formData.append('image', image);
+                formData.append('image', this.models.image[0]);
                 formData.append('status', this.models.status)
                 if (dataUpdate) {
                     axios

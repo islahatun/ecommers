@@ -10,7 +10,8 @@ export default {
     create      : "Create",
     edit        : "Edit",
     delete      : "Delete",
-    save        : "Save"
+    save        : "Save",
+    detail      : "Detail"
   },
 
   users : {

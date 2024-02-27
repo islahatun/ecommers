@@ -10,7 +10,8 @@ export default {
     create      : "Baru",
     edit        : "Ubah",
     delete      : "Hapus",
-    save        : "Simpan"
+    save        : "Simpan",
+    detail      : "Detail"
   },
 
   users : {
