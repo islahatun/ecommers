@@ -242,6 +242,15 @@ class ProdutsController extends Controller
         }
     }
 
+    public function getDataStock(string $id){
+        $getData = incoming_product::where('id_product',$id)->get();
+
+        return response()->json([
+            'success'   => true,
+            'data'      => $getData
+        ]);
+    }
+
     public function createStock(Request $request)
     {
         $validator = validator::make($request->all(), [

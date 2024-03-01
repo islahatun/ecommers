@@ -31,7 +31,10 @@ export default {
     productStock        : "Product Stock",
     productWeight       : "Product Weight",
     productDescription  : "Product Description",
-    productCategory     : "Product  Category"
+    productCategory     : "Product  Category",
+
+    incoming_product    : "Number of Incoming Producta",
+    date_of_entry       : "Date of entry"
   },
 
   banks:{

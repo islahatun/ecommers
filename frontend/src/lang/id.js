@@ -31,7 +31,10 @@ export default {
     productStock        : "Stok Produk",
     productWeight       : "Berat Produk",
     productDescription  : "Deskripsi Product",
-    productCategory     : "Kategory Product"
+    productCategory     : "Kategory Product",
+
+    incoming_product    : "Jumlah product masuk",
+    date_of_entry       : "Tanggal msuk"
   },
 
   banks:{
