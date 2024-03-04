@@ -34,7 +34,8 @@ export default {
     productCategory     : "Product  Category",
 
     incoming_product    : "Number of Incoming Producta",
-    date_of_entry       : "Date of entry"
+    date_of_entry       : "Date of entry",
+    total               : "Total"
   },
 
   banks:{

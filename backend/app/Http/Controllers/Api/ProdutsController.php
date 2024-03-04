@@ -316,10 +316,12 @@ class ProdutsController extends Controller
 
         try {
 
-            incoming_product::where('id', $id)->update([
+            $d =incoming_product::where('id', $id)->update([
                 'incoming_product'  => $request->incoming_product,
                 'date_of_entry'     => $request->date_of_entry
             ]);
+
+            dd($d);
 
             $product        = product::where('id', $request->id_product)->first();
 

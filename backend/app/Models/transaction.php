@@ -21,14 +21,20 @@ class transaction extends Model
     }
 
     public function expeditions(){
-        return $this->belongsTo(expedisi::class);
+        return $this->belongsTo(expedisi::class)->withDefault([
+            'expedition_name'=>''
+        ]);
     }
 
     public function packages(){
-        return $this->belongsTo(package::class);
+        return $this->belongsTo(package::class)->withDefault([
+            'package_name'=>''
+        ]);
     }
 
     public function banks(){
-        return $this->belongsTo(bank::class);
+        return $this->belongsTo(bank::class)->withDefault([
+            'bank_name'=>''
+        ]);
     }
 }

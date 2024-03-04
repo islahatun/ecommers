@@ -194,7 +194,15 @@
                         v-model:search="search"
                         :items="itemsDetalProduct"
                         :headers="headersDetail"
-                        class="mx-3"></v-data-table>
+                        @click:row="selectRowDetail"
+                        class="mx-3">
+                        <template v-slot:footer>
+                          <tr>
+                            <th>kalskalsklsak</th>
+                            <th>{{getTotal()}}</th>
+                          </tr>
+                        </template>
+                    </v-data-table>
 
                         <v-card-action>
                           <v-btn class="ml-3 mb-3" :text="$t('text.closeDialog')" variant="text" color="blue-darken-1" @click="dialog_detail=false"></v-btn>
@@ -278,12 +286,13 @@
                 }
             ],
             headersDetail: [
+              {
+                    title: 'Date of Entry',
+                    value: 'date_of_entry'
+                },
                 {
                     title: 'Number of incoming Product',
                     value: 'incoming_product'
-                }, {
-                    title: 'Date of Entry',
-                    value: 'date_of_entry'
                 }
 
             ],
@@ -291,6 +300,7 @@
             itemsProduct: [],
             itemsCategory: [],
             selectedItem: null,
+            selectedItemDetail:null,
             models: {
                 product_name: '',
                 category_id: '',
@@ -318,6 +328,9 @@
             selectRow(event, item) {
                 this.selectedItem = item.item
 
+            },
+            selectRowDetail(event,item){
+              this.selectedItemDetail = item.item
             },
             getDataProducts() {
                 axios
@@ -407,8 +420,20 @@
                     })
                 this.dialog_detail = true
             },
+            getTotal(){
+              return this.itemsDetalProduct.reduce((sum, item) => sum + parseInt(item.incoming_product), 0)
+            },
             createDetail() {
                 this.dialogFormDetail = true
+            },
+            editDetail(){
+              const itemDetail = this.selectedItemDetail
+
+              this.models = {
+                date_of_entry : itemDetail.date_of_entry,
+                incoming_product:itemDetail.incoming_product
+              }
+              this.dialogFormDetail = true
             },
             openDatePicker() {
                 this.isDatePickerOpen = true;
@@ -419,7 +444,22 @@
             submitDetail() {
                 const dataIdProduct = this
                     .selectedItem
-                    axios
+                const itemDetail = this.selectedItemDetail
+                if(itemDetail){
+                  axios
+                    .put(`${apiUrl}/products/updateStock/${itemDetail.id}`, {
+                        'id_product': dataIdProduct.id,
+                        'incoming_product_old':itemDetail.incoming_product,
+                        'incoming_product': this.models.incoming_product,
+                        'date_of_entry': this.models.date_of_entry
+                    })
+                    .then((response) => {
+                        console.log(response.data)
+                        this.detailItem()
+                        this.dialogFormDetail = false
+                    })
+                }else{
+                  axios
                     .post(`${apiUrl}/products/addStock`, {
                         'id_product': dataIdProduct.id,
                         'incoming_product': this.models.incoming_product,
@@ -430,13 +470,16 @@
                         this.detailItem()
                         this.dialogFormDetail = false
                     })
+                }
+
             }
         },
 
         async mounted() {
             await this.getCatgeory()
             await this.getDataProducts()
-            await this.detailItem();
+            await this.detailItem()
+            await this.getTotal()
         }
     }
 </script>

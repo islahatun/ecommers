@@ -69,7 +69,7 @@ Route::group(['as' => 'products', 'prefix' => 'products'], function () {
     Route::get('getDataById',[ProdutsController::class,'getDataById']);
     Route::post('addStock',[ProdutsController::class,'createStock']);
     Route::get('getDataStock/{id_product}',[ProdutsController::class,'getDataStock']);
-    Route::post('updateStock/{id}',[ProdutsController::class,'updateStock']);
+    Route::put('updateStock/{id}',[ProdutsController::class,'updateStock']);
     Route::post('deleteStock/{id}/{id_product}',[ProdutsController::class,'deleteStock']);
 });
 
